@@ -1,0 +1,30 @@
+{
+  "name": "api-mysql-express-project",
+  "version": "1.0.0",
+  "description": "rest-api application using express.js and mysql",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "test": "test",
+    "start": "node --loader ts-node/esm index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/antonnkom/mysql-express-api-project.git"
+  },
+  "author": "Anton Komarov",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.0.0",
+    "express": "^4.19.2",
+    "mysql2": "^3.11.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0",
+    "nodemon": "^3.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
