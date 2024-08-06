@@ -9,6 +9,12 @@ import { SELECT_COMMENT_BY_ID_QUERY, COMMENT_DUPLICATE_QUERY, INSERT_COMMENT_QUE
 
 export const commentsRouter = Router();
 
+const throwServerError = (res: Response, e: Error) => {
+    console.debug(e.message);
+    res.status(500);
+    res.send('Something went wrong');
+};
+
 commentsRouter.get('/', async (req: Request, res: Response) => {
     try {
         const [comments] = await connection.query<ICommentEntity[]>(
@@ -16,10 +22,10 @@ commentsRouter.get('/', async (req: Request, res: Response) => {
         );
         res.setHeader('Content-Type', 'aplication/json');
         res.send(mapCommentsEntity(comments));
+        return;
     } catch (e) {
-        console.debug(e.message);
-        res.status(500);
-        res.send('Something went wrong');
+        throwServerError(res, e);
+        return;
     }
 });
 
@@ -30,11 +36,18 @@ commentsRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) =
     try {
         const [comments] = await connection.query<ICommentEntity[]>(SELECT_COMMENT_BY_ID_QUERY, id);
         res.setHeader('Content-Type', 'aplication/json');
+        
+        if (comments.length === 0) {
+            res.status(404);
+            res.send(`Comment with id ${id} is not found`);
+            return;
+        } 
+
+        console.log(comments.length);
         res.send(mapCommentsEntity(comments));
+        return;
     } catch (e) {
-        console.debug(e.message);
-        res.status(404);
-        res.send(`Comment with id ${id} is not found`);
+        throwServerError(res, e);
         return;
     }
 });
@@ -68,10 +81,10 @@ commentsRouter.post('/', async (req: Request<{}, {}, CommentCreatePayload>, res:
 
         res.status(201);
         res.send(`Comment id:${id} has been added!`);
+        return;
     } catch (e) {
-        console.debug(e.message);
-        res.status(500);
-        res.send('Server error. Comment has not been created');
+        throwServerError(res, e);
+        return;
     }
 });
 
@@ -118,11 +131,11 @@ commentsRouter.patch('/', async (req: Request<{}, {}, Partial<IComment>>, res: R
         );
 
         res.status(201);
-        res.send({ ...newComment, id })
+        res.send({ ...newComment, id });
+        return;
     } catch (e) {
-        console.log(e.message);
-        res.status(500);
-        res.send('Server error');
+        throwServerError(res, e);
+        return;
     }
 });
 
@@ -134,11 +147,10 @@ commentsRouter.delete('/:id', async (req: Request<{id: string}>, res: Response) 
         res.setHeader('Content-Type', 'aplication/json');
         if (query) {
             res.send(`Comment with id ${id} deleted`);
+            return;
         }
     } catch (e) {
-        console.debug(e.message);
-        res.status(404);
-        res.send(`Comment with id ${id} is not found`);
+        throwServerError(res, e);
         return;
     }
 });

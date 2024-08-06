@@ -29,8 +29,10 @@ productsRouter.get('/', async (req: Request, res: Response) => {
         const result = enhanceProductsComments(products, commentRows);
     
         res.send(result);
+        return;
     } catch (e) {
         throwServerError(res, e);
+        return;
     }
 });
 
@@ -53,8 +55,10 @@ productsRouter.get('/search', async (req: Request<{}, {}, {}, IProductSearchFilt
         const result = enhanceProductsComments(products, commentRows);
 
         res.send(result);
+        return;
     } catch (e) {
         throwServerError(res, e);
+        return;
     }
 });   
 
@@ -83,6 +87,7 @@ productsRouter.get('/:id', async (req: Request<{ id: string }>, res: Response) =
         }
 
         res.send(product);
+        return;
     } catch (e) {
         throwServerError(res, e);
     }
@@ -99,8 +104,10 @@ productsRouter.post('/', async (req: Request<{}, {}, ProductCreatePayload>, res:
 
         res.status(201);
         res.send(`Product id:${id} has been added!`);
+        return;
     } catch (e) {
         throwServerError(res, e);
+        return;
     }
 });
 
@@ -119,7 +126,9 @@ productsRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response
 
         res.status(200);
         res.end();
+        return;
     } catch (e) {
         throwServerError(res, e);
+        return;
     }
 });

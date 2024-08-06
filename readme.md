@@ -90,7 +90,7 @@ primary key |             |              |             | FK         |
 ### product-api
 
 1. ***GET http://localhost:3000/api/products*** - получение списка всех товаров
-2. ***GET http://localhost:3000/api/products/search?title=<title>&description=<description>&priceFrom=<priceFrom>&priceTo=<priceTo>*** - поиск по товарам, где 
+2. ***GET http://localhost:3000/api/products/search?title=Pixel&description=&priceFrom=30000&priceTo=59000*** - поиск по товарам, где 
 *title* - имя (часть имени)
 *description* - описание (часть описания)
 *priceFrom* - значение цены от
