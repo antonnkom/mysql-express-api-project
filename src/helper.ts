@@ -3,10 +3,12 @@ import {
     CommentCreatePayload,
     IComment,
     ICommentEntity,
-    IProduct,
-    IProductSearchFilter
+    IProduct as IProductWithImages,
+    IProductSearchFilter,
+    IProductImageEntity,
+    IProductImage
 } from '../types';
-import { mapCommentEntity } from './services/mapping.js';
+import { mapCommentEntity, mapImageEntity } from './services/mapping.js';
 
 export const validateComment = (comment: CommentCreatePayload): CommentValidator => {
     if (Object.keys(comment).length === 0) {
@@ -23,7 +25,7 @@ export const validateComment = (comment: CommentCreatePayload): CommentValidator
     return null;
 };
 
-export const enhanceProductsComments = (products: IProduct[], commentRows: ICommentEntity[]): IProduct[] => {
+export const enhanceProductsComments = (products: IProductWithImages[], commentRows: ICommentEntity[]): IProductWithImages[] => {
     const commentsByProductId = new Map <string, IComment[]> ();
 
     for (let commentEntity of commentRows) {
@@ -77,3 +79,37 @@ export const getProductsFilterQuery = (filter: IProductSearchFilter): [string, s
 
     return [query, values];
 };
+
+export const enhanceProductsImages = (products: IProductWithImages[], imageRows: IProductImageEntity[]): IProductWithImages[] => {
+    const imagesByProductId = new Map<string, IProductImage[]>();
+    const thumbnailsByProductId = new Map<string, IProductImage>();
+  
+    for (let imageEntity of imageRows) {
+        const image = mapImageEntity(imageEntity);
+
+        if (!imagesByProductId.has(image.productId)) {
+            imagesByProductId.set(image.productId, []);
+        }
+
+        const list = imagesByProductId.get(image.productId);
+        imagesByProductId.set(image.productId, [...list, image]);
+
+        if (image.main) {
+            thumbnailsByProductId.set(image.productId, image);
+        }
+    }
+
+    for (let product of products) {
+        product.thumbnail = thumbnailsByProductId.get(product.id);
+
+        if (imagesByProductId.has(product.id)) {
+            product.images = imagesByProductId.get(product.id);
+
+            if (!product.thumbnail) {
+                product.thumbnail = product.images[0];
+            }
+        }
+    }
+  
+    return products;
+  }

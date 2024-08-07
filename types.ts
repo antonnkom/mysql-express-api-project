@@ -24,7 +24,9 @@ export interface IProduct {
     title: string;
     description: string;
     price: number;
+    thumbnail?: IProductImage;
     comments?: IComment[];
+    images?: IProductImage[];
 }
 
 export interface IProductEntity extends IProduct, RowDataPacket {
@@ -38,4 +40,28 @@ export interface IProductSearchFilter {
     priceTo?: number;
 }
 
-export type ProductCreatePayload = Omit<IProduct, 'id' | 'comments'>;
+export type ImageCreatePayload = Omit<IProductImage, 'id' | 'productId'>;
+
+export type ProductCreatePayload =
+    Omit<IProduct, 'id' | 'comments' | 'thumbnail' | 'images'> & { images: ImageCreatePayload[] };
+
+export interface IProductImage {
+    id: string;
+    productId: string;
+    main: boolean;
+    url: string;
+}
+
+export interface IProductImageEntity extends RowDataPacket {
+    image_id: string;
+    url: string;
+    product_id: string;
+    main: number;
+}
+
+export interface ProductAddImagesPayload {
+    productId: string;
+    images: ImageCreatePayload[];
+}
+
+export type ImagesRemovePayload = string[];

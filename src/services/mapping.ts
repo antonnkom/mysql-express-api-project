@@ -1,4 +1,4 @@
-import { IComment, ICommentEntity, IProduct, IProductEntity } from '../../types';
+import { IComment, ICommentEntity, IProduct, IProductEntity, IProductImage, IProductImageEntity } from '../../types';
 
 export const mapCommentEntity = ({comment_id, product_id, ...rest}: ICommentEntity): IComment => {
     return {
@@ -20,3 +20,16 @@ export const mapProductsEntity = (data: IProductEntity[]): IProduct[] => {
         price: Number(price) || 0
     }));
 };
+
+export const mapImageEntity = ({image_id, product_id, url, main}: IProductImageEntity): IProductImage => {
+    return {
+      id: image_id,
+      productId: product_id,
+      main: Boolean(main),
+      url
+    }
+  }
+  
+  export const mapImagesEntity = (data: IProductImageEntity[]): IProductImage[] => {
+    return data.map(mapImageEntity);
+  }

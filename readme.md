@@ -109,3 +109,42 @@ primary key |             |              |             | FK         |
 ```
 
 5. ***DELETE http://localhost:3000/api/products/id*** - удаление товара
+
+Пример тела запроса DELETE:
+
+``` json
+{
+    "product_id": "4f4b4f16-77cb-4c24-bcae-238cde406fb3"
+}
+```
+
+6. ***POST http://localhost:3000/api/products/add-images*** - добавление изображений определённому товару
+
+Пример тела запроса POST:
+
+```json
+{
+    "productId": "34e1a2a7-d0a9-4c7a-99f6-c2d5b5afaa06",
+    "images": [
+        {
+            "url": "https://unsplash.com/photos/leqrylJNYUQ",
+            "main": true
+        },
+        {
+            "url": "https://unsplash.com/photos/leqrylJNYUQ",
+            "main": false
+        }
+    ]
+}
+```
+
+7. ***DELETE http://localhost:3000/api/products/remove-images*** - удаление изображений
+
+Пример тела запроса DELETE:
+
+```json
+[
+    "7aa70618-e04a-4600-8092-98499cd4fa50",
+    "481d5553-f773-4db9-b6fa-82a9e680801b"
+]
+```
